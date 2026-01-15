@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { theme } from 'shared/theme';
 import { ExpandableDescription } from './ExpandableDescription';
+import { useFeedUIStore } from '../store';
 import type { Snip } from '../types';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -14,8 +15,16 @@ interface FeedItemProps {
 /**
  * FeedItem - Memoized presentational component for a single feed item
  * Displays a full-screen TikTok-like item with video placeholder, title, and description
+ *
+ * Uses Zustand for UI state (expanded descriptions)
  */
 function FeedItemComponent({ snip }: FeedItemProps) {
+  // Get Zustand store hooks for expanded snips and toggle action
+  const expandedSnipIds = useFeedUIStore((state) => state.expandedSnipIds);
+  const toggleExpandedSnip = useFeedUIStore((state) => state.toggleExpandedSnip);
+
+  const isDescriptionExpanded = expandedSnipIds.has(snip.id);
+
   // Build description from available metadata
   const description = [
     snip.titleName,
@@ -43,7 +52,14 @@ function FeedItemComponent({ snip }: FeedItemProps) {
           <Text style={styles.title} numberOfLines={2}>
             {snip.titleName}
           </Text>
-          {description && <ExpandableDescription text={description} />}
+          {description && (
+            <ExpandableDescription
+              text={description}
+              snipId={snip.id}
+              isExpanded={isDescriptionExpanded}
+              onToggle={toggleExpandedSnip}
+            />
+          )}
         </View>
 
         {/* Action buttons (mocked, not clickable) */}
