@@ -16,16 +16,17 @@ interface FeedItemProps {
  * FeedItem - Memoized presentational component for a single feed item
  * Displays a full-screen TikTok-like item with video placeholder, title, and description
  *
- * Uses Zustand for UI state (expanded descriptions)
+ * Performance optimizations:
+ * - Zustand selector: subscribe only to THIS snip's expanded state (not all)
+ * - Memoized with custom comparator (snip.id is the key)
  */
 function FeedItemComponent({ snip }: FeedItemProps) {
-  // Get Zustand store hooks for expanded snips and toggle action
-  const expandedSnipIds = useFeedUIStore((state) => state.expandedSnipIds);
+  // Zustand selector optimization: only re-render if THIS snip's expanded state changes
+  // Without this selector, component would re-render on ANY Zustand store change
+  const isDescriptionExpanded = useFeedUIStore((state) => state.expandedSnipIds.has(snip.id));
   const toggleExpandedSnip = useFeedUIStore((state) => state.toggleExpandedSnip);
 
-  const isDescriptionExpanded = expandedSnipIds.has(snip.id);
-
-  // Build description from available metadata
+  // Description is cheap to compute (string concat), no need for useMemo
   const description = [
     snip.titleName,
     snip.episodeName ? `EP${snip.episodeNumber}: ${snip.episodeName}` : null,

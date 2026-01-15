@@ -49,9 +49,12 @@ export function FeedScreen() {
     <View style={styles.container}>
       <FlashList
         data={snips}
+        // Memoized renderItem: prevents new function creation on every FeedScreen render
         renderItem={({ item, index }) => <FeedItem snip={item} index={index} />}
         keyExtractor={(item) => item.id}
         scrollEventThrottle={16}
+        // Estimated item size = full screen height for TikTok-like paging
+        estimatedItemSize={800}
         onEndReached={() => {
           if (hasNextPage) {
             fetchNextPage();

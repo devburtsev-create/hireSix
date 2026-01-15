@@ -59,6 +59,7 @@ export function ExpandableDescription({
     );
 
     // Use Zustand if snipId and onToggle provided, otherwise local state
+    // Dependencies: snipId never changes within component lifecycle, onToggle is memoized from parent
     if (snipId && onToggle) {
       onToggle(snipId);
     } else {

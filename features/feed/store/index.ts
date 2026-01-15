@@ -29,6 +29,11 @@ interface FeedUIStore {
  * Zustand store for feed UI state
  * Uses Set for O(1) lookups on expanded snips
  * Kept minimal - only UI state, no data
+ *
+ * Performance note:
+ * - Selectors required in components to prevent unnecessary re-renders
+ * - Use: useFeedUIStore((state) => state.expandedSnipIds.has(snipId))
+ * - NOT: useFeedUIStore((state) => state.expandedSnipIds)
  */
 export const useFeedUIStore = create<FeedUIStore>((set) => ({
   // Initial state
