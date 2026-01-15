@@ -1,0 +1,48 @@
+/\*\*
+
+- Feed Feature Architecture
+-
+- Data Flow:
+- ─────────
+-
+- Shared API (axios)
+-     ↓
+- shared/api/endpoints.ts (HTTP layer)
+-     ↓
+- features/feed/api/index.ts (Feature-specific API wrapper)
+-     ↓
+- features/feed/hooks/useFeed.ts (React Query infinite query hook)
+-     ↓
+- FeedScreen (Container - manages pagination & error states)
+-     ↓
+- FeedItem components (Presentational - renders vertical snip)
+-
+- Key Features:
+- ─────────────
+- 1.  Infinite scroll pagination with React Query
+- 2.  Automatic page fetching with getNextPageParam
+- 3.  getFlatSnips() helper to flatten paginated data for FlatList
+- 4.  TikTok-like vertical feed structure (Snip = single video/snippet)
+- 5.  Automatic cache management and stale time
+-
+- Usage Example:
+- ──────────────
+- const { data, hasNextPage, fetchNextPage, isLoading, error } = useFeed();
+- const snips = getFlatSnips(data); // Flatten pages into single array
+-
+- Data Structure:
+- ───────────────
+- FeedPageResponse
+- ├── data
+- │ ├── items: FeedItem[] (grouped snips)
+- │ │ └── snips: Snip[] (individual videos)
+- │ │ ├── id
+- │ │ ├── titleId, titleName
+- │ │ ├── videoUrl, thumbnailUrl
+- │ │ ├── duration
+- │ │ └── episodeInfo (optional)
+- │ ├── pageNumber
+- │ └── hasMore (for pagination)
+- ├── userUuid
+- └── country
+  \*/
