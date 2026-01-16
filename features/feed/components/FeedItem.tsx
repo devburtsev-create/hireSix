@@ -1,9 +1,10 @@
 import { memo } from 'react';
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View, ViewComponent } from 'react-native';
 import { theme } from 'shared/theme';
 import { ExpandableDescription } from './ExpandableDescription';
 import { useFeedUIStore } from '../store';
 import type { Snip } from '../types';
+import { useVideoPlayer, VideoView } from 'expo-video';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -28,21 +29,23 @@ function FeedItemComponent({ snip }: FeedItemProps) {
 
   // Description is cheap to compute (string concat), no need for useMemo
   const description = [
-    snip.titleName,
-    snip.episodeName ? `EP${snip.episodeNumber}: ${snip.episodeName}` : null,
+    snip.name_en,
+    snip.captions_en ? `EP${snip.name_en}: ${snip.captions_en}` : null,
   ]
     .filter(Boolean)
     .join('\n');
+
+  const player = useVideoPlayer(snip.video_playback_url, (player) => {
+    player.play(); // автостарт
+    player.loop = true; // зацикливание
+  });
 
   return (
     <View style={styles.container}>
       {/* Video/Image placeholder */}
       <View style={styles.videoContainer}>
         <View style={styles.videoPlaceholder}>
-          <Text style={styles.videoPlaceholderText}>
-            {snip.titleName.slice(0, 2).toUpperCase()}
-          </Text>
-          <Text style={styles.durationText}>{snip.duration}s</Text>
+          <VideoView style={styles.video} player={player} allowsFullscreen allowsPictureInPicture />
         </View>
       </View>
 
@@ -51,7 +54,7 @@ function FeedItemComponent({ snip }: FeedItemProps) {
         {/* Title and description */}
         <View style={styles.infoSection}>
           <Text style={styles.title} numberOfLines={2}>
-            {snip.titleName}
+            {snip.id}
           </Text>
           {description && (
             <ExpandableDescription
@@ -155,4 +158,5 @@ const styles = StyleSheet.create({
     color: theme.colors.textSecondary,
     fontSize: 12,
   },
+  video: { width: '100%', height: '100%' },
 });

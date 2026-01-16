@@ -1,14 +1,14 @@
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import { BottomTabsNavigator } from './bottom-tabs';
 import { ROOT_ROUTES } from './routes';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // Type definition for Root Stack navigation
 export type RootStackParamList = {
   [ROOT_ROUTES.BOTTOM_TABS]: undefined;
 };
 
-const Stack = createStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export function RootNavigator() {
   return (

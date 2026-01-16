@@ -3,7 +3,7 @@ import { FlashList } from '@shopify/flash-list';
 import { useFeed, getFlatSnips } from '../index';
 import { FeedItem } from '../components/FeedItem';
 import { theme } from 'shared/theme';
-
+import { getFeedPaginationMetadata } from '../hooks/useFeed';
 /**
  * FeedScreen - Container component for TikTok-like vertical feed
  * Manages infinite scroll pagination and error handling
@@ -11,8 +11,15 @@ import { theme } from 'shared/theme';
  * Uses FlashList for optimized performance with full-screen paging
  */
 export function FeedScreen() {
+  // Fetch paginated feed data with infinite scroll support
   const { data, isLoading, error, hasNextPage, fetchNextPage } = useFeed();
+
+  // Flatten all pages into a single array for list rendering
+  // data.pages = [FeedPageData, FeedPageData, ...] → snips = [Snip, Snip, ...]
   const snips = getFlatSnips(data);
+
+  // Get pagination metadata for debugging (optional)
+  const paginationInfo = getFeedPaginationMetadata(data);
 
   // Handle loading state
   if (isLoading && !data) {
@@ -48,13 +55,11 @@ export function FeedScreen() {
   return (
     <View style={styles.container}>
       <FlashList
-        data={snips}
+        data={snips ?? []}
         // Memoized renderItem: prevents new function creation on every FeedScreen render
         renderItem={({ item, index }) => <FeedItem snip={item} index={index} />}
         keyExtractor={(item) => item.id}
         scrollEventThrottle={16}
-        // Estimated item size = full screen height for TikTok-like paging
-        estimatedItemSize={800}
         onEndReached={() => {
           if (hasNextPage) {
             fetchNextPage();

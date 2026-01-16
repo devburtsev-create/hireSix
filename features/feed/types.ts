@@ -2,30 +2,18 @@
 
 export interface Snip {
   id: string;
-  titleId: string;
-  titleName: string;
-  videoUrl: string;
-  thumbnailUrl: string;
-  duration: number;
-  seasonNumber?: number;
-  episodeNumber?: number;
-  episodeName?: string;
-  createdAt: string;
-}
-
-export interface FeedItem {
-  id: string;
-  snips: Snip[];
+  captions_en: string;
+  link: string;
+  name_en: string;
+  poster_url: string;
+  rank: number;
+  video_playback_url: string;
 }
 
 export interface FeedPageData {
-  items: FeedItem[];
-  pageNumber: number;
-  hasMore: boolean;
-}
-
-export interface FeedPageResponse {
-  userUuid: string;
-  country: string;
-  data: FeedPageData;
+  feedTitles: Snip[];
+  currentPage: number;
+  nextPage: number;
+  total: number;
+  totalPages: number;
 }
