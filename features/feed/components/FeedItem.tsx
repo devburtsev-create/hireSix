@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View, ViewComponent } from 'react-native';
 import { theme } from 'shared/theme';
 import { ExpandableDescription } from './ExpandableDescription';
@@ -20,12 +20,17 @@ interface FeedItemProps {
  * Performance optimizations:
  * - Zustand selector: subscribe only to THIS snip's expanded state (not all)
  * - Memoized with custom comparator (snip.id is the key)
+ * - Video playback controlled by activeSnipIndex from FeedScreen
  */
-function FeedItemComponent({ snip }: FeedItemProps) {
+function FeedItemComponent({ snip, index }: FeedItemProps) {
   // Zustand selector optimization: only re-render if THIS snip's expanded state changes
   // Without this selector, component would re-render on ANY Zustand store change
   const isDescriptionExpanded = useFeedUIStore((state) => state.expandedSnipIds.has(snip.id));
   const toggleExpandedSnip = useFeedUIStore((state) => state.toggleExpandedSnip);
+
+  // Read active index to determine if this item's video should play
+  const activeSnipIndex = useFeedUIStore((state) => state.activeSnipIndex);
+  const isActive = index === activeSnipIndex;
 
   // Description is cheap to compute (string concat), no need for useMemo
   const description = [
@@ -35,10 +40,20 @@ function FeedItemComponent({ snip }: FeedItemProps) {
     .filter(Boolean)
     .join('\n');
 
+  // Initialize video player WITHOUT autoplay
   const player = useVideoPlayer(snip.video_playback_url, (player) => {
-    player.play(); // автостарт
-    player.loop = true; // зацикливание
+    player.loop = true; // Enable looping for continuous playback
   });
+
+  // Control video playback based on visibility in the feed
+  // Only play when this item is the active (visible) item
+  useEffect(() => {
+    if (isActive) {
+      player.play();
+    } else {
+      player.pause();
+    }
+  }, [isActive, player]);
 
   return (
     <View style={styles.container}>

@@ -1,9 +1,14 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View, Dimensions, ViewToken } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useFeed, getFlatSnips } from '../index';
 import { FeedItem } from '../components/FeedItem';
 import { theme } from 'shared/theme';
 import { getFeedPaginationMetadata } from '../hooks/useFeed';
+import { useFeedUIStore } from '../store';
+import { useRef } from 'react';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+
 /**
  * FeedScreen - Container component for TikTok-like vertical feed
  * Manages infinite scroll pagination and error handling
@@ -20,6 +25,17 @@ export function FeedScreen() {
 
   // Get pagination metadata for debugging (optional)
   const paginationInfo = getFeedPaginationMetadata(data);
+
+  // useRef to store callback without re-creating it on every render
+  // Prevents unnecessary subscription/unsubscription cycles in FlashList
+  const onViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: ViewToken[] }) => {
+    // Find the first item that is > 80% visible (per viewabilityConfig)
+    if (viewableItems.length > 0) {
+      const visibleItem = viewableItems[0];
+      // Update Zustand store directly to avoid re-rendering FeedScreen
+      useFeedUIStore.getState().setActiveSnipIndex(visibleItem.index ?? 0);
+    }
+  }).current;
 
   // Handle loading state
   if (isLoading && !data) {
@@ -60,6 +76,19 @@ export function FeedScreen() {
         renderItem={({ item, index }) => <FeedItem snip={item} index={index} />}
         keyExtractor={(item) => item.id}
         scrollEventThrottle={16}
+        // estimatedItemSize={SCREEN_HEIGHT}
+        // Pagination configuration for TikTok-like snap behavior
+        pagingEnabled
+        snapToInterval={SCREEN_HEIGHT}
+        snapToAlignment="start"
+        decelerationRate="fast"
+        // Viewability tracking: detect which item is in focus
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={{
+          itemVisiblePercentThreshold: 80,
+        }}
+        // Hide scroll indicator for cleaner UI
+        scrollIndicatorInsets={{ right: 1 }}
         onEndReached={() => {
           if (hasNextPage) {
             fetchNextPage();
