@@ -1,5 +1,5 @@
 import { NavigationContainer } from '@react-navigation/native';
-import { BottomTabsNavigator } from './bottom-tabs';
+import { BottomTabsNavigator } from './BottomTabs';
 import { ROOT_ROUTES } from './routes';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 

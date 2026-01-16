@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { RootNavigator } from 'navigation/root-navigator';
+import { RootNavigator } from 'navigation/RootNavigator';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import './global.css';

@@ -1,6 +1,6 @@
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import { FEED_STACK_ROUTES } from './routes';
-import { FeedScreen } from 'features/feed/screens/feed-screen';
+import { FeedScreen } from 'features/feed/screens/FeedScreen';
 
 // Type definition for Feed Stack navigation
 export type FeedStackParamList = {

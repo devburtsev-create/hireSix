@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BOTTOM_TAB_ROUTES } from './routes';
-import { HomeStackNavigator } from './home-stack';
-import { FeedStackNavigator } from './feed-stack';
+import { HomeStackNavigator } from './HomeStack';
+import { FeedStackNavigator } from './FeedStack';
 
 // Type definition for Bottom Tab navigation
 export type BottomTabsParamList = {

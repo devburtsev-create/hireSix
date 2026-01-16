@@ -1,6 +1,6 @@
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import { HOME_STACK_ROUTES } from './routes';
-import { HomeScreen } from 'features/home/screens/home-screen';
+import { HomeScreen } from 'features/home/screens/HomeScreen';
 
 // Type definition for Home Stack navigation
 export type HomeStackParamList = {
