@@ -2,6 +2,7 @@ import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-nativ
 import { useHome } from '../index';
 import { HomeSection } from '../components/HomeSection';
 import { theme } from 'shared/theme';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 /**
  * HomeScreen - Container component for the home feed
@@ -19,6 +20,8 @@ export function HomeScreen() {
       </View>
     );
   }
+
+  console.log(data);
 
   // Handle error state
   if (error || !data?.data?.components) {
@@ -56,6 +59,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
+    paddingTop: 40,
+    paddingBottom: 80,
   },
   content: {
     paddingVertical: theme.spacing.lg,

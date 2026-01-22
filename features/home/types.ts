@@ -23,8 +23,14 @@ export interface Component {
   titles: Title[];
 }
 
+export interface PageSettings {
+  search: boolean;
+}
+
 export interface HomePageData {
   components: Component[];
+  settings: PageSettings;
+  pageType: string;
 }
 
 export interface HomePageResponse {

@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
 import { theme } from 'shared/theme';
 import type { Title } from '../types';
 
@@ -16,13 +16,16 @@ export function HomeSection({ title, titles }: HomeSectionProps) {
     <View style={styles.titleContainer}>
       {item.posterUrl && (
         <View style={styles.poster}>
-          <Text style={styles.posterPlaceholder}>{item.nameEn.slice(0, 2).toUpperCase()}</Text>
+          <Image source={{ uri: item.posterUrl }} style={styles.posterImage} resizeMode="cover" />
         </View>
       )}
-      <Text style={styles.titleText} numberOfLines={2}>
-        {item.nameEn}
-      </Text>
-      <Text style={styles.genre}>{item.genres[0] || 'N/A'}</Text>
+
+      <View className="items-end justify-end">
+        <Text style={styles.genre} numberOfLines={2}>
+          {item.genres.join(' ') || 'N/A'}
+        </Text>
+        <Text style={styles.titleText}>{item.nameEn}</Text>
+      </View>
     </View>
   );
 
@@ -68,6 +71,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  posterImage: {
+    borderRadius: 12,
+    width: '100%',
+    height: '100%',
+  },
   posterPlaceholder: {
     ...theme.typography.h2,
     color: theme.colors.textSecondary,
@@ -80,6 +88,7 @@ const styles = StyleSheet.create({
   },
   genre: {
     ...theme.typography.caption,
+    textTransform: 'uppercase',
     color: theme.colors.textSecondary,
     fontSize: 12,
   },
