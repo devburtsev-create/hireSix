@@ -206,44 +206,7 @@ Endpoints are immutable; API responses define the data structure.
 2. **Offline not supported** — React Query caching helps, but no offline-first sync
 3. **Error states simple** — Generic error messages; no retry logic (could be added)
 
-## Future Enhancements (Out of Scope)
 
-- [ ] Video playback integration (Video component)
-- [ ] User authentication (OAuth, JWT)
-- [ ] Offline sync (WatermelonDB)
-- [ ] Analytics integration
-- [ ] Dark mode toggle (theme already supports it)
-- [ ] Search/filtering
-- [ ] Gesture-based navigation (Reanimated for swipe gestures)
-- [ ] WebSocket for real-time updates
-
-## Development Notes
-
-### File Organization
-
-- Keep components small and focused
-- One component per file (except index exports)
-- Types in `types.ts` per feature
-- Styles with `StyleSheet.create()` at file bottom
-
-### Adding New Features
-
-1. Create feature folder: `features/{featureName}`
-2. Add types: `types.ts`
-3. Add API wrapper: `api/index.ts`
-4. Add React Query hook: `hooks/use{FeatureName}.ts`
-5. Add screens: `screens/{featureName}-screen.tsx`
-6. Export public API: `index.ts`
-
-### Common Pitfalls
-
-- ❌ Storing server data in Zustand
-- ❌ Zustand without selectors (causes broad re-renders)
-- ❌ useCallback with missing dependencies
-- ❌ Inline functions in FlatList/FlashList (use keyExtractor carefully)
-- ✓ Use TypeScript strictly
-- ✓ Measure performance with React DevTools Profiler
-- ✓ Test on real devices; simulators hide threading issues
 
 ## License
 
